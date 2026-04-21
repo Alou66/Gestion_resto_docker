@@ -1,0 +1,92 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Emplacement {
+  TERRASSE
+  INTERIEUR
+  VIP
+}
+
+enum CategoriePlat {
+  ENTREE
+  PLAT
+  DESSERT
+  BOISSON
+}
+
+enum StatutPlat {
+  DISPONIBLE
+  INDISPONIBLE
+}
+
+enum StatutCommande {
+  EN_COURS
+  SERVIE
+  ANNULEE
+}
+
+model Table {
+  id          String       @id @default(cuid())
+  numero      Int          @unique
+  capacite    Int
+  emplacement Emplacement
+  commandes   Commande[]
+  serveurs    Serveur[]
+
+  @@index([numero])
+}
+
+model Serveur {
+  id         String      @id @default(cuid())
+  prenom     String
+  nom        String
+  email      String      @unique
+  telephone  String
+  tableId    String?
+  table      Table?      @relation(fields: [tableId], references: [id], onDelete: SetNull)
+  commandes  Commande[]
+
+  @@index([email])
+  @@index([tableId])
+}
+
+model Plat {
+  id        String        @id @default(cuid())
+  nom       String
+  categorie CategoriePlat
+  prix      Decimal       @db.Decimal(10, 2)
+  statut    StatutPlat    @default(DISPONIBLE)
+  commandes Commande[]
+
+  @@index([categorie])
+  @@index([statut])
+}
+
+model Commande {
+  id            String          @id @default(cuid())
+  tableId       String
+  serveurId     String
+  platId        String
+  quantite      Int
+  montantTotal  Decimal         @db.Decimal(10, 2)
+  statut        StatutCommande  @default(EN_COURS)
+  dateCommande  DateTime
+
+  table         Table   @relation(fields: [tableId], references: [id], onDelete: Cascade)
+  serveur       Serveur @relation(fields: [serveurId], references: [id], onDelete: Cascade)
+  plat          Plat    @relation(fields: [platId], references: [id], onDelete: Cascade)
+
+  @@index([tableId])
+  @@index([serveurId])
+  @@index([platId])
+  @@index([statut])
+  @@index([dateCommande])
+}
+
+

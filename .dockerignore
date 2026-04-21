@@ -1,0 +1,14 @@
+node_modules
+npm-debug.log*
+dist
+build
+.git
+.env
+.DS_Store
+*.log
+coverage
+.nyc_output
+prisma/migrations
+README.md
+setup.js
+docker.txt

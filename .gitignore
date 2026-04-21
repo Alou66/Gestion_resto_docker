@@ -1,0 +1,12 @@
+node_modules
+.env
+/generated/prisma
+setup.js
+docker.txt
+
+# Ajouter
+.git
+.env.local
+.env.*.local
+*.pem
+id_rsa
