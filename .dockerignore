@@ -8,7 +8,6 @@ build
 *.log
 coverage
 .nyc_output
-prisma/migrations
 README.md
 setup.js
 docker.txt
